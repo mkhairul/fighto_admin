@@ -1,0 +1,127 @@
+<script type="text/ng-template" id="/myModalContent.html">
+  <div class="modal-header">
+    <button type="button" data-dismiss="modal" aria-hidden="true" class="close" ng-click="cancel()">×</button>
+    <h4 id="myModalLabel" class="modal-title">Alert Players - {{modal_title}}</h4>
+  </div>
+  <div class="modal-body">
+    <fieldset>
+       <div class="form-group">
+          <div class="col-sm-12">
+             <div class="row">
+                <div class="col-sm-12">
+                   <input type="text" 
+                          placeholder="Message to send to players" 
+                          class="form-control" ng-model="message" />
+                </div>
+             </div>
+          </div>
+       </div>
+    </fieldset>
+  </div>
+  <div class="modal-footer">
+    <button data-ng-click="ok()" class="btn btn-primary">OK</button>
+    <button data-ng-click="cancel()" class="btn btn-warning">Cancel</button>
+  </div>
+</script>
+<h3>{{event.name}}
+   <button type="button" class="pull-right btn btn-primary" ng-click="createRound()">Create Round</button>
+   <button type="button" class="pull-right btn btn-primary mr" ngf-select ngf-change="upload($files)">Add Player List</button>
+   <small>{{ event.desc }}</small>
+</h3>
+<div class="row">
+   <div class="col-lg-6">
+      <div class="panel panel-default" data-ng-class="app.viewAnimation" ng-if="players && main_state == 'players'">
+          <div class="panel-heading">
+            <span>Player List</span>
+          </div>
+          <div class="panel-body">
+             <!-- START table-responsive-->
+             <div class="table-responsive">
+                <table class="table">
+                   <thead>
+                      <tr>
+                         <th>#</th>
+                         <th>Name</th>
+                      </tr>
+                   </thead>
+                   <tbody>
+                      <tr ng-repeat="player in players track by $index | orderBy:'name'">
+                         <td>{{ ($index+1) }}</td>
+                         <td>{{player.name}}</td>
+                      </tr>
+                   </tbody>
+                </table>
+             </div>
+             <!-- END table-responsive-->
+          </div>
+       </div>
+       
+       <div class="panel panel-default" 
+            data-ng-class="app.viewAnimation" 
+            ng-if="main_state == 'pairings'" 
+            ng-repeat="row in rounds | filter:{'id':round_id}">
+          <div class="panel-heading">
+            <span>Pairings</span>
+            <a href="#" ng-click="changeState('players')" class="btn btn-xs btn-primary pull-right">
+               <small>View Players</small>
+            </a>
+          </div>
+          <div class="panel-body">
+             <!-- START table-responsive-->
+             <div class="table-responsive">
+                <table class="table">
+                   <thead>
+                      <tr>
+                         <th>Table #</th>
+                         <th>Name</th>
+                         <th>Points</th>
+                         <th>Name</th>
+                         <th>Points</th>
+                      </tr>
+                   </thead>
+                   <tbody>
+                      <tr ng-repeat="table in row.pairings">
+                         <td>{{ table.table_no }}</td>
+                         <td>{{ table.player1 }}</td>
+                         <td>{{ table.point1 }}</td>
+                         <td>{{ table.player2 }}</td>
+                         <td>{{ table.point2 }}</td>
+                      </tr>
+                   </tbody>
+                </table>
+             </div>
+             <!-- END table-responsive-->
+          </div>
+       </div>
+   </div>
+   <div class="col-lg-6">
+     <div id="roundId_{{row.id}}" 
+          class="panel panel-default" 
+          data-ng-class="app.viewAnimation" 
+          ng-repeat="row in rounds.slice().reverse()">
+         <div class="panel-heading">
+            <span class="panel-title">{{ row.name }}
+                <a href="#" ng-click="deleteRound(row.id)" class="btn btn-xs btn-danger pull-right">
+                   <small>Delete</small>
+                </a>
+            </span>
+         </div>
+         <div class="panel-body">
+            <p>
+               <button type="button" class="mr btn btn-primary btn-sm" ngf-select ngf-change="uploadPairing($files, row.id)">Add Pairings</button>
+               <button type="button" 
+                       class="mr btn btn-primary btn-sm" 
+                       ng-click="viewPairings(row.id)"
+                       ng-if="row.pairings.length > 0">View Pairings</button>
+               <button type="button" class="mr btn btn-primary btn-sm">Set Time</button>
+               <button type="button" class="mr btn btn-success btn-sm" ng-click="startStopRound(row)">{{ (row.start) ? 'Stop Round':'Start Round' }}</button>
+               <button type="button" class="mr btn btn-danger btn-sm" ng-click="openModal('', row.name)">Alert Players</button>
+            </p>
+            <p>
+               <timer interval="1000" end-time="row.end_time" countdown="row.countdown" max-time-unit="'minute'" autostart="{{ (row.start) ? row.start:timer_autostart }}">{{hours}} hour{{hoursS}}, {{ (minutes > 0) ? minutes:0 }} minute{{minutesS}}, {{(seconds > 0) ? seconds:0}} second{{secondsS}}.</timer>
+            </p>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- woot -->

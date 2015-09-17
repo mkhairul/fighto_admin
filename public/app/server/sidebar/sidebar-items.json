@@ -1,0 +1,13 @@
+[
+  {
+    "text": "Main Navigation",
+    "type": "heading",
+    "translate": "sidebar.heading.HEADER"
+  },
+  {
+    "text": "Dashboard",
+    "sref": "app.mainpage",
+    "icon": "icon-bar-graph",
+    "translate": "sidebar.nav.DASHBOARD"
+  }
+]

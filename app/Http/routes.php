@@ -12,5 +12,5 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('main', ['fb_id' => env('FB_ID', '')]);
 });
