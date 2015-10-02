@@ -3,9 +3,21 @@ App.controller('LoginController', ['$rootScope', '$scope', '$http', '$state', '$
     
   $scope.login = {}
   $scope.loading = '';
+  $scope.auth = $auth;
 
   $scope.login_submit = function(){
       $scope.loading = 'LOADING';
+      $auth.login($scope.user)
+        .then(function() {
+          $scope.loading = '';
+          $scope.error = '';
+          $state.go("app.mainpage");
+        })
+        .catch(function(response) {
+          $scope.loading = '';
+          $scope.error = response.data.message;
+        });
+      /*
       $http.post($rootScope.url + '/login', $scope.login).
         success(function(data){
           console.log(data)
@@ -18,6 +30,7 @@ App.controller('LoginController', ['$rootScope', '$scope', '$http', '$state', '$
         error(function(data){
           console.log('unable to retrieve event');
       });
+      */
   }
   
   $scope.register_submit = function(formValid){
@@ -35,8 +48,15 @@ App.controller('LoginController', ['$rootScope', '$scope', '$http', '$state', '$
         error(function(data){
       });
   }
+  
+  console.log($auth.isAuthenticated());
+  
     
   $scope.authenticate = function(provider) {
       $auth.authenticate(provider);
+  };
+    
+  $scope.logout = function(){
+      $auth.logout();
   };
 }])

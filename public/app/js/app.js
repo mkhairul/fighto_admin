@@ -142,10 +142,22 @@ App.controller('AppController',
 App.config(['$authProvider', '$stateProvider','$urlRouterProvider', '$controllerProvider', '$compileProvider', '$filterProvider', '$provide', '$ocLazyLoadProvider', 'appDependencies',
     function ($authProvider, $stateProvider, $urlRouterProvider, $controllerProvider, $compileProvider, $filterProvider, $provide, $ocLazyLoadProvider, appDependencies) {
       'use strict';
-        
+    
+      $authProvider.baseUrl = 'http://localhost:8001/';
+      $authProvider.withCredentials = false;
+    
       // Social logins
       $authProvider.facebook({
-        clientId: fb_id
+        clientId: fb_id,
+        url: 'http://localhost:8001/auth/facebook',
+        authorizationEndpoint: 'https://www.facebook.com/v2.3/dialog/oauth',
+        redirectUri: (window.location.origin || window.location.protocol + '//' + window.location.host) + '/',
+        requiredUrlParams: ['display', 'scope'],
+        scope: ['email'],
+        scopeDelimiter: ',',
+        display: 'popup',
+        type: '2.0',
+        popupOptions: { width: 580, height: 400 }
       });
 
       App.controller = $controllerProvider.register;

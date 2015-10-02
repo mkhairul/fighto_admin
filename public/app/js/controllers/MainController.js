@@ -1,4 +1,4 @@
-App.controller('MainController', ['$rootScope', '$scope', '$http', '$state', function($rootScope, $scope, $http, $state) {
+App.controller('MainController', ['$rootScope', '$scope', '$http', '$state', '$auth', function($rootScope, $scope, $http, $state, $auth) {
   'use strict';
   
   $scope.events = [];
@@ -9,19 +9,7 @@ App.controller('MainController', ['$rootScope', '$scope', '$http', '$state', fun
   $scope.display_back = false;
     
   $rootScope.logout = function(){
-      $scope.loading = 'LOADING';
-      $http.post($rootScope.url + '/logout').
-        success(function(data){
-          console.log(data)
-          $scope.loading = '';
-          if(data.status == 'ok')
-          {
-              $state.go("page.login");
-          }
-      }).
-        error(function(data){
-          console.log('unable to retrieve event');
-      });
+      $auth.logout();
   }
   
   $scope.getEvents = function(){
